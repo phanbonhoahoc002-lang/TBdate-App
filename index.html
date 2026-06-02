@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TBdate - Ứng Dụng Quản Lý Chuỗi Kỷ Luật</title>
+    
+    <!-- Icon ngôi sao vàng lấp lánh trên thanh Tab trình duyệt -->
+    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/star--v1.png">
+    
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- ================= MÀN HÌNH XÁC THỰC (AUTH) ================= -->
+        <div id="auth-container" class="app-content">
+            
+            <!-- FORM ĐĂNG NHẬP -->
+            <div id="login-box" class="auth-box">
+                <h2>TBdate</h2>
+                <p class="subtitle">Thắp sáng ngọn lửa kỷ luật, chinh phục mục tiêu mỗi ngày</p>
+                
+                <form id="login-form">
+                    <div class="input-group">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="login-username" placeholder="Tên đăng nhập..." required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="login-password" placeholder="Mật khẩu..." required>
+                    </div>
+                    <button type="submit" class="btn-primary">Đăng Nhập Hoà Nhập</button>
+                </form>
+                <div class="auth-footer">
+                    Chưa có tài khoản? <a href="#" id="go-to-register">Đăng ký ngay</a>
+                </div>
+            </div>
+
+            <!-- FORM ĐĂNG KÝ -->
+            <div id="register-box" class="auth-box hidden">
+                <h2>Tạo Tài Khoản</h2>
+                <p class="subtitle">Bắt đầu hành trình rèn luyện bản thân cùng TBdate</p>
+                
+                <form id="register-form">
+                    <div class="input-group">
+                        <i class="fa-solid fa-signature"></i>
+                        <input type="text" id="reg-fullname" placeholder="Họ và tên của bạn..." required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="reg-username" placeholder="Tên đăng nhập (viết liền)..." required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="reg-password" placeholder="Mật khẩu bảo mật..." required>
+                    </div>
+                    <button type="submit" class="btn-primary">Kích Hoạt Hành Trình</button>
+                </form>
+                <div class="auth-footer">
+                    Đã có tài khoản rồi? <a href="#" id="go-to-login">Quay lại đăng nhập</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= GIAO DIỆN CHÍNH (MAIN APP) ================= -->
+        <div id="main-container" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
+            
+            <!-- THANH TIÊU ĐỀ TRÊN CÙNG -->
+            <header class="app-header">
+                <div class="logo">
+                    <i class="fa-solid fa-star"></i> TBdate
+                </div>
+                <button class="user-menu-btn" id="nav-profile-btn">
+                    <i class="fa-solid fa-user-gear"></i> <span id="nav-username">User</span>
+                </button>
+            </header>
+
+            <!-- NỘI DUNG CÁC TAB CHI TIẾT -->
+            <main class="app-content">
+                
+                <!-- TAB 1: TRANG CHỦ (QUẢN LÝ CHUỖI) -->
+                <div id="tab-home" class="tab-content">
+                    <div class="welcome-box">
+                        <h3>Chào bạn, <span id="welcome-name">Chiến binh</span>! 👋</h3>
+                        <p>Hôm nay là một ngày tuyệt vời để duy trì và tích lũy thêm các chuỗi ngày kỷ luật thép.</p>
+                    </div>
+
+                    <div class="section-title">
+                        <h4>Chuỗi kỷ luật của bạn</h4>
+                        <button class="btn-sm" id="open-add-modal"><i class="fa-solid fa-plus"></i> Tạo chuỗi mới</button>
+                    </div>
+
+                    <div id="habit-list" class="habit-list">
+                        <!-- Danh sách chuỗi thói quen tự động render ở đây -->
+                    </div>
+                </div>
+
+                <!-- TAB 2: THỐNG KÊ & NHẬT KÝ -->
+                <div id="tab-analytics" class="tab-content hidden">
+                    <div class="analytics-grid-single">
+                        <div class="analytics-card">
+                            <i class="fa-solid fa-fire" style="color: var(--primary);"></i>
+                            <div class="analytics-num" id="stat-total-checkins">0</div>
+                            <div class="analytics-label">Tổng số lần rèn luyện thành công</div>
+                        </div>
+                    </div>
+
+                    <div class="profile-section">
+                        <h4><i class="fa-solid fa-chart-simple" style="color: #38bdf8;"></i> Tần suất 7 ngày qua</h4>
+                        <div class="chart-container" id="chart-days-container">
+                            <!-- Các cột biểu đồ tự động render ở đây -->
+                        </div>
+                    </div>
+
+                    <!-- Khu vực viết Nhật ký -->
+                    <div class="profile-section">
+                        <h4><i class="fa-solid fa-book-open" style="color: #9b59b6;"></i> Nhật ký suy ngẫm hành trình</h4>
+                        <form id="journal-form" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                            <input type="text" id="journal-title" placeholder="Tiêu đề tâm trạng hôm nay..." required>
+                            <textarea id="journal-text" placeholder="Hôm nay bạn đã vượt qua cám dỗ như thế nào? Cảm xúc của bạn ra sao..." rows="3" required></textarea>
+                            <button type="submit" class="btn-primary" style="padding: 10px;">Lưu lại & Nhận +5 Xu</button>
+                        </form>
+                        <div id="journal-container" class="journal-wrapper" style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto;">
+                            <!-- Danh sách bài viết nhật ký -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: TÀI KHOẢN & CỬA HÀNG -->
+                <div id="tab-profile" class="tab-content hidden">
+                    
+                    <div class="profile-card">
+                        <!-- Hệ thống chọn Avatar mới -->
+                        <div class="profile-avatar" id="main-avatar" onclick="toggleAvatarShelf()">
+                            <img id="current-avatar-img" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix" alt="Avatar">
+                        </div>
+                        <h3 id="prof-fullname">Họ Tên</h3>
+                        <p class="prof-username">@<span id="prof-username-span">username</span></p>
+
+                        <!-- Kho 5 Avatar ẩn hiện -->
+                        <div id="avatar-shelf" class="avatar-shelf hidden">
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">Click chọn ảnh đại diện của bạn:</p>
+                            <div class="avatar-options">
+                                <img class="avatar-opt" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix" onclick="changeAvatar('https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Felix')">
+                                <img class="avatar-opt" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Aneka" onclick="changeAvatar('https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Aneka')">
+                                <img class="avatar-opt" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Chocobo" onclick="changeAvatar('https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Chocobo')">
+                                <img class="avatar-opt" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Stitch" onclick="changeAvatar('https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Stitch')">
+                                <img class="avatar-opt" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Leo" onclick="changeAvatar('https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Leo')">
+                            </div>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div style="display: flex; justify-content: space-around;">
+                                <div>
+                                    <div class="stat-num" id="prof-max-streak">0</div>
+                                    <div class="stat-label">Kỷ lục chuỗi</div>
+                                </div>
+                                <div>
+                                    <div class="stat-num" id="prof-coins">0</div>
+                                    <div class="stat-label">Xu tích lũy</div>
+                                </div>
+                                <div>
+                                    <div class="stat-num" id="prof-freeze-count">0</div>
+                                    <div class="stat-label">Khiên băng</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cửa hàng bổ trợ kỷ luật -->
+                    <div class="profile-section">
+                        <h4><i class="fa-solid fa-bag-shopping" style="color: var(--success)"></i> Tiệm tạp hóa kỷ luật</h4>
+                        <div class="shop-item" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h5>Khiên Đóng Băng Chuỗi</h5>
+                                <p>Tự động bảo vệ, cứu chuỗi của bạn không bị reset về 0 nếu chẳng may quên điểm danh 1 ngày.</p>
+                                <span class="badge" style="color: #fbbf24; background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.2);"><i class="fa-solid fa-coins"></i> Giá: 50 Xu</span>
+                            </div>
+                            <button class="btn-sm btn-shop-buy" id="buy-freeze-btn">Mua ngay</button>
+                        </div>
+                    </div>
+
+                    <!-- Bộ sưu tập danh hiệu huy chương vinh danh -->
+                    <div class="profile-section">
+                        <h4><i class="fa-solid fa-award" style="color: #fbbf24;"></i> Phòng trưng bày danh hiệu</h4>
+                        <div class="badges-wrapper" id="badges-container" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                            <!-- Huy chương tự render ở đây -->
+                        </div>
+                    </div>
+
+                    <button class="btn-danger" id="logout-btn"><i class="fa-solid fa-power-off"></i> Đăng xuất tài khoản</button>
+                </div>
+
+            </main>
+
+            <!-- THANH ĐIỀU HƯỚNG BOTTOM MENU (MOBILE / SIDEBAR WINDOWS) -->
+            <nav class="bottom-nav">
+                <button class="nav-item active" id="btn-tab-home">
+                    <i class="fa-solid fa-fire-flame-curved"></i>
+                    <span>Rèn luyện</span>
+                </button>
+                <button class="nav-item" id="btn-tab-analytics">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Thống kê</span>
+                </button>
+                <button class="nav-item" id="btn-tab-profile">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                    <span>Cá nhân</span>
+                </button>
+            </nav>
+
+        </div>
+    </div>
+
+    <!-- MODAL TẠO CHUỖI MỚI -->
+    <div id="add-habit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Tạo Chuỗi Kỷ Luật Mới</h3>
+            <form id="add-habit-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <div class="form-group" style="display: flex; flex-direction: column;">
+                    <label>Tên hành động cần duy trì:</label>
+                    <input type="text" id="habit-name" placeholder="Ví dụ: Học tiếng Anh 30 phút, Chạy bộ..." required>
+                </div>
+                <div class="form-group" style="display: flex; flex-direction: column;">
+                    <label>Mục tiêu hướng tới:</label>
+                    <input type="text" id="habit-target-group" placeholder="Ví dụ: Phát triển bản thân, Sức khỏe..." required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary" id="close-modal">Hủy bỏ</button>
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px; width: auto;">Khởi tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CHỈNH SỬA CHUỖI -->
+    <div id="edit-habit-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Chỉnh sửa chuỗi kỷ luật</h3>
+            <form id="edit-habit-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="hidden" id="edit-habit-index">
+                <div class="form-group" style="display: flex; flex-direction: column;">
+                    <label>Tên hành động mới:</label>
+                    <input type="text" id="edit-habit-name" required>
+                </div>
+                <div class="form-group" style="display: flex; flex-direction: column;">
+                    <label>Mục tiêu hướng tới:</label>
+                    <input type="text" id="edit-habit-target" required>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary" id="close-edit-modal">Hủy</button>
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px; width: auto;">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
